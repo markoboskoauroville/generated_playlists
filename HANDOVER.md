@@ -39,8 +39,9 @@ python3 tools/tidal_playlist.py create playlists/X.txt             # creates the
   `JjTAmDVohiV7GgOL` (public, no secret), OAuth 2.1 + PKCE, redirect `http://localhost:8765/tidal-callback`,
   API `https://openapi.tidal.com/v2`. Playlists are created `UNLISTED`; tracks are added 20 at a time.
 - Token: `~/.config/tidal_generated/token.json` (never commit or print it), or the `TIDAL_REFRESH_TOKEN`
-  environment variable. **That variable is not set yet**, so each new container needs the login again.
-  Offer Marko once to save it in the environment so future sessions skip the login.
+  environment variable. **`TIDAL_REFRESH_TOKEN` is set in Code_Space_108j** (tested 2026-10-16: it logs
+  in, and TIDAL does not rotate it), so new sessions need no login. If it stops working (password change,
+  "log out everywhere"), do the login below and ask Marko to replace the variable's value.
 - `create` always makes a **new** playlist; it cannot edit an existing one.
 
 **How matching works** (`find`): it tries searches from exact to loose (full line → title without the
@@ -53,7 +54,7 @@ reported with `--` and skipped.
 
 If search still can't reach a track, pin it: `Artist - Title [tidal:<track id>]` (used for "Lola's Theme (VIP)").
 
-## Logging in (Marko is on an Android phone)
+## Logging in (only if the token stops working; Marko is on an Android phone)
 
 1. Run `login-url` and send Marko the URL. **All the steps must run in the same container**, because the PKCE
    verifier lives in `~/.config/tidal_generated/pkce.json`.
@@ -81,4 +82,3 @@ If search still can't reach a track, pin it: `Artist - Title [tidal:<track id>]`
 
 - "Apache": Marko mentioned a band with a name like that, singing about women healers, for the reggae style.
   Nobody has identified it yet. If you recognise it, offer to add 1-3 songs.
-- `TIDAL_REFRESH_TOKEN` is not saved yet (see above).
