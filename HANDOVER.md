@@ -1,4 +1,4 @@
-# HANDOVER: finish "Reggae Vocal Healing (generated)" on TIDAL
+# HANDOVER: finish 2 playlists on TIDAL: "Reggae Vocal Healing (generated)" and "Tech House Groove (generated)"
 
 Written 2026-10-16 by the Claude Code session that started this repo. That session could not reach TIDAL,
 so the next session (in the **Code_Space_108j** environment) finishes the job. Read this whole file, then do
@@ -83,6 +83,17 @@ app uses). If either call fails, fix it from the error text TIDAL returns.
 8. Optional, if Marko agrees: so future sessions don't need the login dance, he can save the refresh token as a
    `TIDAL_REFRESH_TOKEN` environment variable of Code_Space_108j. It is in `~/.config/tidal_generated/token.json`
    after login. Never commit the token or print it in the chat unless he asks for it.
+
+## Second playlist: Tech House Groove (generated)
+
+Marko then sent `TIDAL.txt`: 100 tracks (`Artist | Title | tidal search link`), all house / tech house
+(Prospa, Franky Rizardo, ANOTR, Mochakk, Cloonee, Chris Lake, ...). He asked: "please build this playlist on
+tidal". He gave no name, so it is **Tech House Groove (generated)** (rename it if he says otherwise). It is
+converted, in his order, to `playlists/2026-10-16_tech-house-groove.txt`.
+- Some songs appear twice ("Edge of Desire" rows 1 and 89, "Look Good" rows 40 and 67). The script adds each
+  TIDAL track only once.
+- After the reggae playlist is done (same login, same container), run steps 5-7 above for this file too,
+  without needing a second login. Give him both links.
 
 **Next playlists:** Marko will send more reference songs (screenshots from his DJ app). Each one gets a new
 `playlists/YYYY-MM-DD_<style>.txt`, a TIDAL playlist ending in "(generated)", and a README table row.

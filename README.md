@@ -18,3 +18,4 @@ The token stays out of the repo (`~/.config/tidal_generated/`), or comes from th
 | Date | Playlist | Reference |
 |---|---|---|
 | 2026-10-16 | Reggae Vocal Healing (generated) | Nalini Blossom - The Water Blessing Song |
+| 2026-10-16 | Tech House Groove (generated) | Marko's TIDAL.txt (100 tracks) |
