@@ -131,6 +131,9 @@ def sim(a, b):
     return len(a & b) / max(len(a | b), 1)
 
 
+VARIANT = re.compile(r"\b(remix|mix|live|edit|version|acoustic|instrumental|dub|karaoke|cover|rework|vip)\b", re.I)
+
+
 def find(artist, title, cc):
     q = f"{artist} {title}"
     j = call("GET", "/searchResults/" + urllib.parse.quote(q, safe=""), {"countryCode": cc, "include": "tracks"},
@@ -143,10 +146,14 @@ def find(artist, title, cc):
         return None, 0.0
     t = call("GET", "/tracks", {"filter[id]": ",".join(ids), "countryCode": cc, "include": "artists"})
     names = {i["id"]: i["attributes"]["name"] for i in t.get("included", []) if i["type"] == "artists"}
+    rank = {i: n for n, i in enumerate(ids)}
     best, best_score = None, 0.0
-    for tr in t.get("data", []):
+    for tr in sorted(t.get("data", []), key=lambda x: rank.get(x["id"], 99)):
         arts = [names.get(a["id"], "") for a in tr.get("relationships", {}).get("artists", {}).get("data", [])]
-        s = 0.6 * sim(title, tr["attributes"]["title"]) + 0.4 * max([sim(artist, a) for a in arts] or [0])
+        got = tr["attributes"]["title"] + " " + (tr["attributes"].get("version") or "")
+        s = 0.6 * sim(title, got) + 0.4 * max([sim(artist, a) for a in arts] or [0])
+        if VARIANT.search(got) and not VARIANT.search(title):
+            s -= 0.05  # prefer the original over remixes/live takes nobody asked for
         if s > best_score:
             best, best_score = (tr["id"], ", ".join(arts), tr["attributes"]["title"]), s
     return best, best_score
