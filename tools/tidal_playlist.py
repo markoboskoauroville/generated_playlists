@@ -136,7 +136,7 @@ def sim(a, b):
     return len(a & b) / max(len(a | b), 1)
 
 
-VARIANT = re.compile(r"\b(remix|mix|mixed|live|edit|version|acoustic|instrumental|dub|karaoke|cover|rework|vip)\b", re.I)
+VARIANT = re.compile(r"\b(remix|mix|mixed|live|edit|version|acoustic|instrumental|dub|karaoke|cover|rework|re-work|reprise|recut|demo|vip)\b", re.I)
 
 
 def search_ids(q, cc):
@@ -148,29 +148,57 @@ def search_ids(q, cc):
     return [x["id"] for x in data.get("relationships", {}).get("tracks", {}).get("data", [])][:20]
 
 
+def score(artist, title, name, version, arts):
+    got = name + " " + (version or "")  # TIDAL keeps "Xyz Remix" in version
+    s = 0.6 * sim(title, name) + 0.4 * max([sim(artist, a) for a in arts] or [0])
+    if re.search(r"[(\[]", title):  # a named remix/version: its words count too
+        s += 0.1 * len(words(title) & words(got)) / max(len(words(title) | words(got)), 1)
+    if (version or re.search(r"[(\[]", name)) and not re.search(r"[(\[]", title):
+        s -= 0.02  # any extra "(...)" or version nobody asked for: the plain one wins a tie
+    if VARIANT.search(got) and not VARIANT.search(title):
+        s -= 0.05  # prefer the original over remixes/live takes nobody asked for
+    if re.search(r"\bmixed\b", got, re.I) and not re.search(r"\bmixed\b", title, re.I):
+        s -= 0.05  # a cut from a continuous DJ mix
+    return s
+
+
+def queries(artist, title):
+    """From exact to loose. The song matters more than the version: if the named remix isn't on TIDAL,
+    the looser searches find the original or another version of the same song."""
+    bare = norm(title)  # without "(... Remix)", "feat. ..."
+    first = artist.split(",")[0].split("&")[0].strip()
+    squashed = re.sub(r"[^\w\s]", "", re.sub(r"\(.*?\)|\[.*?\]", " ", title))  # "D.A.N.C.E." -> "DANCE"
+    plain = re.sub(r"[()\[\]]", " ", title)
+    qs = [f"{artist} {plain}", f"{artist} {bare}", f"{first} {bare}", f"{first} {squashed}", bare]
+    out = []
+    for q in qs:
+        q = " ".join(q.split())
+        if q and q.lower() not in map(str.lower, out):
+            out.append(q)
+    return out
+
+
 def find(artist, title, cc):
-    ids = search_ids(" ".join(re.sub(r"[()\[\]]", " ", f"{artist} {title}").split()), cc)
-    if re.search(r"[(\[]", title):  # TIDAL often files the remix name under "version": search the bare title too
-        ids = ids[:12] + [i for i in search_ids(f"{artist} {norm(title)}", cc) if i not in ids[:12]][:8]
-    if not ids:
-        return None, 0.0
-    t = call("GET", "/tracks", {"filter[id]": ",".join(ids), "countryCode": cc, "include": "artists"})
-    names = {i["id"]: i["attributes"]["name"] for i in t.get("included", []) if i["type"] == "artists"}
-    rank = {i: n for n, i in enumerate(ids)}
-    best, best_score = None, 0.0
-    for tr in sorted(t.get("data", []), key=lambda x: rank.get(x["id"], 99)):
-        arts = [names.get(a["id"], "") for a in tr.get("relationships", {}).get("artists", {}).get("data", [])]
-        name = tr["attributes"]["title"]
-        got = name + " " + (tr["attributes"].get("version") or "")  # TIDAL keeps "Xyz Remix" in version
-        s = 0.6 * sim(title, name) + 0.4 * max([sim(artist, a) for a in arts] or [0])
-        if re.search(r"[(\[]", title):  # a named remix/version: its words count too
-            s += 0.1 * len(words(title) & words(got)) / max(len(words(title) | words(got)), 1)
-        if VARIANT.search(got) and not VARIANT.search(title):
-            s -= 0.05  # prefer the original over remixes/live takes nobody asked for
-        if re.search(r"\bmixed\b", got, re.I) and not re.search(r"\bmixed\b", title, re.I):
-            s -= 0.05  # a cut from a continuous DJ mix
-        if s > best_score:
-            best, best_score = (tr["id"], ", ".join(arts), " - ".join(x for x in (name, tr["attributes"].get("version")) if x)), s
+    good = 1.1 if re.search(r"[(\[]", title) else 1.0  # a perfect match stops the search early
+    best, best_score, seen = None, 0.0, set()
+    for q in queries(artist, title):
+        ids = [i for i in search_ids(q, cc) if i not in seen]
+        seen.update(ids)
+        if not ids:
+            continue
+        t = call("GET", "/tracks", {"filter[id]": ",".join(ids), "countryCode": cc, "include": "artists"})
+        names = {i["id"]: i["attributes"]["name"] for i in t.get("included", []) if i["type"] == "artists"}
+        rank = {i: n for n, i in enumerate(ids)}
+        for tr in sorted(t.get("data", []), key=lambda x: rank.get(x["id"], 99)):
+            arts = [names.get(a["id"], "") for a in tr.get("relationships", {}).get("artists", {}).get("data", [])]
+            name, version = tr["attributes"]["title"], tr["attributes"].get("version")
+            if sim(title, name) < 0.5 or max([sim(artist, a) for a in arts] or [0]) < 0.3:
+                continue  # another song by the same artist, or the same title by someone else, is not the song
+            s = score(artist, title, name, version, arts)
+            if s > best_score:
+                best, best_score = (tr["id"], ", ".join(arts), " - ".join(x for x in (name, version) if x)), s
+        if best_score >= good - 1e-9:
+            break
     return best, best_score
 
 

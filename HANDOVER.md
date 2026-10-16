@@ -1,88 +1,84 @@
-# HANDOVER: finish "Reggae Vocal Healing (generated)" on TIDAL
+# HANDOVER: generated_playlists
 
-Written 2026-10-16 by the Claude Code session that started this repo. That session could not reach TIDAL,
-so the next session (in the **Code_Space_108j** environment) finishes the job. Read this whole file, then do
-**The task** at the bottom.
+Updated 2026-10-16. Read this first in a new session; then wait for Marko's next reference song.
 
-## What Marko asked (his words, cleaned up)
+## What this repository is for
 
-> In this chat we generate playlists from reference songs, to continue in the same musical style. This is the
-> first one: reggae vocal healing songs (like "Apache" and similar artists). Generate the playlist on my TIDAL
-> account, and in this repository write text files with artist and song name. If you need secrets for TIDAL
-> that are not in the environment, tell me. My DJ app is TIDAL-compatible and the code is already there. When
-> you create the playlist, put **(generated)** in the name, so I know Claude made it.
+Marko (a DJ) sends reference songs, usually screenshots from his DJ app. Claude continues them into a playlist
+in the same musical style, then:
 
-- **Reference song** (screenshot from his DJ app, below): **Nalini Blossom - The Water Blessing Song**
-  (shown at 138.0 BPM in the app, so a half-time feel of about 69 BPM).
-- About "Apache": he is not sure of the band's name. He thinks they sing about **women healers**. He said
-  "whatever, it's similar", so no change was made. If you recognise the band, add 1-3 of their songs and
-  mention it.
+1. writes `playlists/YYYY-MM-DD_<style>.txt`: one `Artist - Title` per line, first `#` line = playlist name;
+2. creates the playlist on Marko's **TIDAL** account (his DJ app reads TIDAL), name ending in **(generated)**;
+3. adds a row with the TIDAL link to the table in `README.md`, saves the reference screenshots in `handover/`,
+   commits and pushes.
 
-![reference](handover/reference_nalini-blossom_water-blessing-song.png)
+His rules so far:
+- Put **(generated)** in every TIDAL playlist name, so he knows Claude made it.
+- Include every song he sends, then continue in the same style up to the length he asks for (last one: 108).
+- **The song matters, not the exact version.** If a named remix isn't on TIDAL, use the original or another
+  version of the same song. Only swap for a different song when the song itself isn't there, and say so.
+- A new reference in a new style becomes a **new** playlist (ask if it's unclear).
 
-## What is done (branch `ccr-bd69dadb-47iidg`)
+## Playlists made
 
-| File | What |
-|---|---|
-| `playlists/2026-10-16_reggae-vocal-healing.txt` | 36 songs, `Artist - Title` per line, first `#` line = playlist name |
-| `tools/tidal_playlist.py` | stdlib-only Python: TIDAL login (PKCE, paste-back), search, create playlist |
-| `README.md` | repo conventions + index table of playlists |
-| `handover/` | the two screenshots in this file |
+| File | TIDAL | Songs | Notes |
+|---|---|---|---|
+| `2026-10-16_reggae-vocal-healing.txt` | [Reggae Vocal Healing (generated)](https://tidal.com/playlist/f819de05-39e0-4f6d-ab8e-c270e183d36d) | 36 | Reference: Nalini Blossom - The Water Blessing Song (`handover/reference_nalini-*.png`). Mike Love "Human Revolution" and Koffee "Toast" (only a remix) were swapped for "Love Will Find a Way" and "Raggamuffin". |
+| `2026-10-16_nu-disco.txt` | [Nu Disco Chart (generated)](https://tidal.com/playlist/3fb44298-fa71-4bec-8016-eeda23e81105) | 108 | Reference: his DJ app's Nu Disco / Disco chart, #1-17 (`handover/reference_nu-disco-chart_*.png`), then nu disco, disco house, disco pop, classics. #18 was cut off in the screenshot and left out. On TIDAL, "Le Freak" is the original (the script now finds the Dimitri From Paris remix, so a rebuild would use it). |
 
-**The flow of the list:** it opens with the reference song, then healing and medicine-style vocals (Jah9, Mike
-Love, Trevor Hall, Nahko, Xavier Rudd, Rising Appalachia, Nattali Rize), then female roots vocals (Etana,
-Hempress Sativa, Lila Iké), then roots reggae (Chronixx, Protoje, Kabaka Pyramid, Samory I, the Marleys,
-Matisyahu, Alborosie, ...). It closes on Bob Marley "Natural Mystic".
+## The TIDAL tool: `tools/tidal_playlist.py` (stdlib only)
 
-**How the TIDAL part works:** it copies Marko's macOS app `markoboskoauroville/SCREENSHOT_TO_TIDAL`
-(`app/Tidal.swift`):
-- the "DJ Mantra" TIDAL app, client id `JjTAmDVohiV7GgOL`, public client (no secret needed);
-- OAuth 2.1 authorization code + PKCE, redirect `http://localhost:8765/tidal-callback`;
-- scopes `user.read search.read playlists.read playlists.write`;
-- API `https://openapi.tidal.com/v2` (JSON:API). Playlists are made `UNLISTED`, tracks are added 20 at a time.
+```
+python3 tools/tidal_playlist.py login-url                    # prints a TIDAL login URL
+python3 tools/tidal_playlist.py login-finish '<localhost URL>'
+python3 tools/tidal_playlist.py create playlists/X.txt --dry-run   # check every match first
+python3 tools/tidal_playlist.py create playlists/X.txt             # creates the playlist, prints its link
+```
 
-The Mac app catches the redirect with a local listener. In the cloud there is none, so the script prints the
-login URL and Marko pastes back the `localhost:8765/...` URL his browser lands on (the page fails to load;
-that is expected).
+- Same TIDAL app and API as Marko's `markoboskoauroville/SCREENSHOT_TO_TIDAL`: the "DJ Mantra" app, client id
+  `JjTAmDVohiV7GgOL` (public, no secret), OAuth 2.1 + PKCE, redirect `http://localhost:8765/tidal-callback`,
+  API `https://openapi.tidal.com/v2`. Playlists are created `UNLISTED`; tracks are added 20 at a time.
+- Token: `~/.config/tidal_generated/token.json` (never commit or print it), or the `TIDAL_REFRESH_TOKEN`
+  environment variable. **That variable is not set yet**, so each new container needs the login again.
+  Offer Marko once to save it in the environment so future sessions skip the login.
+- `create` always makes a **new** playlist; it cannot edit an existing one.
 
-**Not yet proven:** the script has never talked to TIDAL. In particular the search call tries
-`GET /searchResults/{query}` first and falls back to `GET /searchResults?filter[query]=` (the form the Swift
-app uses). If either call fails, fix it from the error text TIDAL returns.
+**How matching works** (`find`): it tries searches from exact to loose (full line → title without the
+"(... Remix)" → first artist only → title without punctuation, e.g. "D.A.N.C.E." → "DANCE" → title alone) and
+stops at a perfect match. A candidate must match the title (≥ 50 % of words) **and** the artist, so another
+song by the same artist, or a cover by someone else, is never taken. Among versions of the right song it
+prefers, in order: the named remix if the line names one → the plain original → other versions. Remixes,
+live, demo, reprise and "Mixed" (cuts from continuous DJ mixes) lose a tie. Lines scoring under 60 % are
+reported with `--` and skipped.
 
-## Why it stopped
+If search still can't reach a track, pin it: `Artist - Title [tidal:<track id>]` (used for "Lola's Theme (VIP)").
 
-- The first session ran in the **Default** environment of the account `marko.bosko@gmail.com` ("trusted"
-  network). `login.tidal.com`, `auth.tidal.com` and `openapi.tidal.com` were all refused there: the proxy
-  answered 403 to CONNECT.
-- Marko added those domains in another environment, **Code_Space_108j**: Custom access, package managers ticked
-  (screenshot below). That environment belongs to a different account or organization than the first session,
-  which could not see it or switch to it. He also sees different chats on his two phones, which fits that.
-- So: **continue from a session in Code_Space_108j.**
+## Logging in (Marko is on an Android phone)
 
-![environment](handover/env_code_space_108j_network.jpg)
+1. Run `login-url` and send Marko the URL. **All the steps must run in the same container**, because the PKCE
+   verifier lives in `~/.config/tidal_generated/pkce.json`.
+2. After he logs in, his browser shows **"Unable to connect / localhost"**. This is expected; the code is in the
+   address. Because the page is in an in-app browser, the address is hidden: tell him to tap **⋮ → Copy link**
+   (or "Open in browser" and copy the address bar) and paste the whole
+   `http://localhost:8765/tidal-callback?code=...&state=...` back.
+3. `login-finish '<that URL>'`. The scope it prints must include `playlists.write`.
 
-## The task (for the next session)
+## Environment
 
-1. Clone `markoboskoauroville/generated_playlists` and check out branch `ccr-bd69dadb-47iidg`. Develop and push
-   on that branch (or the branch your session is given, after merging this one into it).
-2. Check TIDAL is reachable (any HTTP code, not a refused connection):
-   `for h in login.tidal.com auth.tidal.com openapi.tidal.com; do curl -s -o /dev/null -w "$h %{http_code}\n" https://$h/; done`
-   If it is refused, tell Marko which host was refused and stop.
-3. `python3 tools/tidal_playlist.py login-url`. Send Marko the URL and ask him to log in and paste back the
-   `http://localhost:8765/tidal-callback?code=...&state=...` address his browser lands on. Run all steps in
-   the **same container**: the PKCE verifier is kept in `~/.config/tidal_generated/pkce.json`.
-4. `python3 tools/tidal_playlist.py login-finish '<pasted URL>'`. The scope it prints must include
-   `playlists.write`. If it doesn't, the DJ Mantra app on developer.tidal.com needs that scope (see the
-   SCREENSHOT_TO_TIDAL README).
-5. `python3 tools/tidal_playlist.py create playlists/2026-10-16_reggae-vocal-healing.txt --dry-run`, and check
-   the matches. For a song below 60 % or wrongly matched, fix the line in the txt file (exact TIDAL spelling) or
-   swap it for a similar song in the same style that does exist.
-6. Then without `--dry-run`. The playlist must be named **Reggae Vocal Healing (generated)**. Give Marko the
-   `https://tidal.com/playlist/<id>` link and the list of songs that were not found or were swapped.
-7. Commit the corrected txt (and any script fixes). In the README table, add the TIDAL link. Push.
-8. Optional, if Marko agrees: so future sessions don't need the login dance, he can save the refresh token as a
-   `TIDAL_REFRESH_TOKEN` environment variable of Code_Space_108j. It is in `~/.config/tidal_generated/token.json`
-   after login. Never commit the token or print it in the chat unless he asks for it.
+- Works in the **Code_Space_108j** environment (Custom network access with `login.tidal.com`,
+  `auth.tidal.com`, `openapi.tidal.com`). In the account's Default environment the proxy refused TIDAL.
+- Quick check: `for h in login.tidal.com auth.tidal.com openapi.tidal.com; do curl -s -o /dev/null -w "$h %{http_code}\n" https://$h/; done`.
+  A 403 or 404 from CloudFront means the host is reachable. A refused CONNECT (403 from the proxy, no
+  `server: CloudFront`) means it is blocked: tell Marko which host.
 
-**Next playlists:** Marko will send more reference songs (screenshots from his DJ app). Each one gets a new
-`playlists/YYYY-MM-DD_<style>.txt`, a TIDAL playlist ending in "(generated)", and a README table row.
+## Git
+
+- Current work: branch `claude/generate-playlist-mpncvw` (contains everything). The older branch
+  `ccr-bd69dadb-47iidg` holds the first session's work and the first handover, already merged here.
+  No pull request has been opened.
+
+## Open items
+
+- "Apache": Marko mentioned a band with a name like that, singing about women healers, for the reggae style.
+  Nobody has identified it yet. If you recognise it, offer to add 1-3 songs.
+- `TIDAL_REFRESH_TOKEN` is not saved yet (see above).
