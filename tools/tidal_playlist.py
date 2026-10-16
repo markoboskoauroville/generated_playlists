@@ -4,6 +4,7 @@
 Same TIDAL app and API as SCREENSHOT_TO_TIDAL (DJ Mantra, client id JjTAmDVohiV7GgOL,
 OAuth 2.1 + PKCE, openapi.tidal.com v2). Standard library only.
 
+    python3 tools/tidal_playlist.py check                     # token works? (prints user and scope, no secrets)
     python3 tools/tidal_playlist.py login-url                 # prints a URL: open it, log in
     python3 tools/tidal_playlist.py login-finish '<URL>'      # the localhost URL the browser landed on
     python3 tools/tidal_playlist.py create playlists/X.txt [--name NAME] [--dry-run]
@@ -193,7 +194,12 @@ def create(path, name=None, dry=False):
 
 if __name__ == "__main__":
     a = sys.argv[1:]
-    if a[:1] == ["login-url"]:
+    if a[:1] == ["check"]:
+        me = call("GET", "/users/me").get("data", {})
+        t = load(TOKEN_FILE) or {}
+        print("TIDAL OK: user", me.get("id"), "country", me.get("attributes", {}).get("country"),
+              "| scope:", t.get("scope") or "(not reported)")
+    elif a[:1] == ["login-url"]:
         login_url()
     elif a[:1] == ["login-finish"] and len(a) == 2:
         login_finish(a[1])
