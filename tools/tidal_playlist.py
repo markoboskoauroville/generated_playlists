@@ -126,22 +126,32 @@ def norm(s):
     return " ".join(re.sub(r"[^a-z0-9]+", " ", s).split())
 
 
+def words(s):
+    s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode().lower()
+    return set(re.sub(r"[^a-z0-9]+", " ", s).split())
+
+
 def sim(a, b):
     a, b = set(norm(a).split()), set(norm(b).split())
     return len(a & b) / max(len(a | b), 1)
 
 
-VARIANT = re.compile(r"\b(remix|mix|live|edit|version|acoustic|instrumental|dub|karaoke|cover|rework|vip)\b", re.I)
+VARIANT = re.compile(r"\b(remix|mix|mixed|live|edit|version|acoustic|instrumental|dub|karaoke|cover|rework|vip)\b", re.I)
 
 
-def find(artist, title, cc):
-    q = f"{artist} {title}"
+def search_ids(q, cc):
     j = call("GET", "/searchResults/" + urllib.parse.quote(q, safe=""), {"countryCode": cc, "include": "tracks"},
              soft=True) or call("GET", "/searchResults", {"filter[query]": q, "countryCode": cc, "include": "tracks"})
     data = j.get("data") or {}
     if isinstance(data, list):
         data = data[0] if data else {}
-    ids = [x["id"] for x in data.get("relationships", {}).get("tracks", {}).get("data", [])][:20]
+    return [x["id"] for x in data.get("relationships", {}).get("tracks", {}).get("data", [])][:20]
+
+
+def find(artist, title, cc):
+    ids = search_ids(" ".join(re.sub(r"[()\[\]]", " ", f"{artist} {title}").split()), cc)
+    if re.search(r"[(\[]", title):  # TIDAL often files the remix name under "version": search the bare title too
+        ids = ids[:12] + [i for i in search_ids(f"{artist} {norm(title)}", cc) if i not in ids[:12]][:8]
     if not ids:
         return None, 0.0
     t = call("GET", "/tracks", {"filter[id]": ",".join(ids), "countryCode": cc, "include": "artists"})
@@ -150,12 +160,17 @@ def find(artist, title, cc):
     best, best_score = None, 0.0
     for tr in sorted(t.get("data", []), key=lambda x: rank.get(x["id"], 99)):
         arts = [names.get(a["id"], "") for a in tr.get("relationships", {}).get("artists", {}).get("data", [])]
-        got = tr["attributes"]["title"] + " " + (tr["attributes"].get("version") or "")
-        s = 0.6 * sim(title, got) + 0.4 * max([sim(artist, a) for a in arts] or [0])
+        name = tr["attributes"]["title"]
+        got = name + " " + (tr["attributes"].get("version") or "")  # TIDAL keeps "Xyz Remix" in version
+        s = 0.6 * sim(title, name) + 0.4 * max([sim(artist, a) for a in arts] or [0])
+        if re.search(r"[(\[]", title):  # a named remix/version: its words count too
+            s += 0.1 * len(words(title) & words(got)) / max(len(words(title) | words(got)), 1)
         if VARIANT.search(got) and not VARIANT.search(title):
             s -= 0.05  # prefer the original over remixes/live takes nobody asked for
+        if re.search(r"\bmixed\b", got, re.I) and not re.search(r"\bmixed\b", title, re.I):
+            s -= 0.05  # a cut from a continuous DJ mix
         if s > best_score:
-            best, best_score = (tr["id"], ", ".join(arts), tr["attributes"]["title"]), s
+            best, best_score = (tr["id"], ", ".join(arts), " - ".join(x for x in (name, tr["attributes"].get("version")) if x)), s
     return best, best_score
 
 
@@ -167,8 +182,11 @@ def read_list(path):
             name = line.lstrip("# ").strip()
         if not line or line.startswith("#"):
             continue
+        pin = re.search(r"\s*\[tidal:(\d+)\]$", line)  # "Artist - Title [tidal:123]" pins an exact track
+        if pin:
+            line = line[:pin.start()]
         artist, _, title = line.partition(" - ")
-        rows.append((artist.strip(), title.strip()))
+        rows.append((artist.strip(), title.strip(), pin.group(1) if pin else None))
     return name, rows
 
 
@@ -179,8 +197,8 @@ def create(path, name=None, dry=False):
         name += " (generated)"
     cc = country()
     ids = []
-    for artist, title in rows:
-        hit, s = find(artist, title, cc)
+    for artist, title, pin in rows:
+        hit, s = ((pin, artist, title + " (pinned)"), 1.0) if pin else find(artist, title, cc)
         mark = "OK " if hit and s >= 0.6 else "-- "
         print(f"{mark}{s:4.0%}  {artist} - {title}" + (f"   => {hit[1]} - {hit[2]} [{hit[0]}]" if hit else ""))
         if hit and s >= 0.6 and hit[0] not in ids:

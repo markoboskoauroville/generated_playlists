@@ -1,0 +1,119 @@
+# Nu Disco Chart (generated)
+# Reference: Nu Disco / Disco chart, top 17 (screenshots from the DJ app)
+# Format: Artist - Title (one per line; lines starting with # are ignored; [tidal:<id>] pins a track)
+
+# --- the chart ---
+Shakedown - At Night (Purple Disco Machine Remix)
+Mylo, Claptone - Drop The Pressure (Purple Disco Machine Remix)
+Diplo, SIDEPIECE - On My Mind (Purple Disco Machine Remix)
+Sgt Slick - Gimme! Gimme! Gimme!
+Purple Disco Machine - Body Funk
+Disko Junkie - I Like To Party
+Softmal, Nytron - All Night Long (2K21 Mix)
+Tensnake - Coma Cat
+Moloko - Sing It Back
+Choices - Less Is More
+Praise Cats, Andrea Love - Shined On Me
+The Shapeshifters - Lola's Theme (VIP) [tidal:407374690]
+Coeo - Like It Is
+Chic - Le Freak
+Lizzo - About Damn Time (Purple Disco Machine Remix)
+Disko Junkie - Just The Two Of Us
+Sister Sledge - Lost In Music (Dimitri From Paris Remix)
+
+# --- nu disco / disco house ---
+Purple Disco Machine - Hypnotized
+Purple Disco Machine - Dished (Male Stripper)
+Purple Disco Machine - Fireworks
+Purple Disco Machine - In The Dark
+Purple Disco Machine - Paradise
+Purple Disco Machine - Honey Boy
+Purple Disco Machine - Dopamine
+Kungs - This Girl
+Kungs - Never Going Home
+Claptone - No Eyes
+Tensnake - Love Sublime
+Duke Dumont - Ocean Drive
+Dom Dolla - San Frandisco
+Shouse - Love Tonight
+The Knocks - Classic
+Breakbot - Baby I'm Yours
+Chromeo - Jealous (I Ain't With It)
+Roosevelt - Fever
+Parcels - Tieduprightnow
+Jungle - Back On 74
+Jungle - Casio
+Todd Terje - Inspector Norse
+Todd Terje - Delorean Dynamite
+Lindstrøm - I Feel Space
+Crazy P - Like A Fool
+Classixx - I'll Get You
+Bag Raiders - Shooting Stars
+Lifelike, Kris Menace - Discopolis
+Aeroplane - We Can't Fly
+Cassius - Feeling For You
+Alan Braxe, Fred Falke - Intro
+Stardust - Music Sounds Better With You
+Spiller - Groovejet (If This Ain't Love)
+Daft Punk - One More Time
+Daft Punk - Digital Love
+Daft Punk - Get Lucky
+Roger Sanchez - Another Chance
+Moloko - The Time Is Now
+Mousse T. - Horny '98
+Armand Van Helden - You Don't Know Me
+Bob Sinclar - I Feel For You
+Freemasons - Love On My Mind
+Eric Prydz - Call On Me
+Joey Negro - Make A Move On Me
+Jamiroquai - Cosmic Girl
+Jamiroquai - Little L
+Jamiroquai - Canned Heat
+Justice - D.A.N.C.E. [tidal:43421710]
+
+# --- disco pop ---
+Dua Lipa - Don't Start Now
+Dua Lipa - Levitating
+Dua Lipa - Hallucinate
+Calvin Harris, Dua Lipa - One Kiss
+Elton John, Dua Lipa - Cold Heart (PNAU Remix)
+Jessie Ware - Free Yourself
+Jessie Ware - Spotlight
+Róisín Murphy - Overpowered
+Kylie Minogue - Magic
+Sophie Ellis-Bextor - Murder On The Dancefloor
+Mark Ronson - Uptown Funk
+
+# --- disco classics ---
+Chic - Good Times
+Chic - I Want Your Love
+Sister Sledge - He's The Greatest Dancer
+Sister Sledge - We Are Family
+Earth, Wind & Fire - September
+Earth, Wind & Fire - Let's Groove
+Donna Summer - I Feel Love
+Donna Summer - Hot Stuff
+Cerrone - Supernature
+Cerrone - Love In C Minor
+Chaka Khan - Ain't Nobody
+Diana Ross - I'm Coming Out
+Diana Ross - Upside Down
+Michael Jackson - Don't Stop 'Til You Get Enough
+Kool & The Gang - Get Down On It
+Kool & The Gang - Celebration
+Gloria Gaynor - I Will Survive
+Patrice Rushen - Forget Me Nots
+Shalamar - A Night To Remember
+Change - A Lover's Holiday
+Lipps Inc. - Funkytown
+Sylvester - You Make Me Feel (Mighty Real)
+Odyssey - Native New Yorker
+Sheila & B. Devotion - Spacer
+Anita Ward - Ring My Bell
+The Trammps - Disco Inferno
+Bee Gees - You Should Be Dancing
+Indeep - Last Night A D.J. Saved My Life
+Evelyn "Champagne" King - Shame
+McFadden & Whitehead - Ain't No Stoppin' Us Now
+Loleatta Holloway - Love Sensation
+The Jacksons - Blame It On The Boogie

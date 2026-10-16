@@ -3,6 +3,7 @@
 Playlists Claude generates from reference songs, to continue in the same musical style.
 
 - `playlists/YYYY-MM-DD_<style>.txt`: one `Artist - Title` per line. The first `#` line is the playlist name.
+  Add `[tidal:<id>]` at the end of a line to pin an exact TIDAL track when search can't find it.
   Every playlist made on TIDAL ends in **(generated)**.
 - `tools/tidal_playlist.py`: puts a list on TIDAL (same DJ Mantra app and API as SCREENSHOT_TO_TIDAL).
 
@@ -18,3 +19,4 @@ The token stays out of the repo (`~/.config/tidal_generated/`), or comes from th
 | Date | Playlist | Reference |
 |---|---|---|
 | 2026-10-16 | [Reggae Vocal Healing (generated)](https://tidal.com/playlist/f819de05-39e0-4f6d-ab8e-c270e183d36d) | Nalini Blossom - The Water Blessing Song |
+| 2026-10-16 | [Nu Disco Chart (generated)](https://tidal.com/playlist/3fb44298-fa71-4bec-8016-eeda23e81105) | Nu Disco / Disco chart, top 17 (DJ app screenshots) |
