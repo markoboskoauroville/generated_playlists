@@ -21,7 +21,10 @@ Do this once, in the cloud environment's settings (environment menu → Edit):
 1. Network access: allow `login.tidal.com`, `auth.tidal.com`, `openapi.tidal.com`.
 2. Environment variables: add `TIDAL_REFRESH_TOKEN=<token>`. To copy the token on the Mac (the Screenshot to
    TIDAL app is logged in) without showing it on screen:
-   `security find-generic-password -s community.auroville.screenshot2tidal -a token-JjTAmDVohiV7GgOL -w | python3 -c 'import json,sys;print(json.load(sys.stdin)["refresh"],end="")' | pbcopy`
+   **From the phone (Termux):** `pkg install python termux-api`, then
+   `curl -sLO https://raw.githubusercontent.com/markoboskoauroville/generated_playlists/ccr-bd69dadb-47iidg/tools/tidal_token_termux.py && python tidal_token_termux.py`.
+   It opens TIDAL's login in the browser, catches it and puts the token in the clipboard.
+   **From the Mac:** `security find-generic-password -s community.auroville.screenshot2tidal -a token-JjTAmDVohiV7GgOL -w | python3 -c 'import json,sys;print(json.load(sys.stdin)["refresh"],end="")' | pbcopy`
 3. Start a new session. `tools/tidal_playlist.py create ...` then works with no login.
 
 If TIDAL starts refusing the token (`invalid_grant`), log in again in the Mac app and repeat step 2.
