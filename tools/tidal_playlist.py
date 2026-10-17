@@ -7,7 +7,7 @@ OAuth 2.1 + PKCE, openapi.tidal.com v2). Standard library only.
     python3 tools/tidal_playlist.py login-url                 # prints a URL: open it, log in
     python3 tools/tidal_playlist.py login-finish '<URL>'      # the localhost URL the browser landed on
     python3 tools/tidal_playlist.py create playlists/X.txt [--name NAME] [--dry-run]
-    python3 tools/tidal_playlist.py radio playlists/X.txt [--per N] [--name NAME] [--dry-run]
+    python3 tools/tidal_playlist.py radio playlists/X.txt [--per N] [--hours H] [--min-radios 2] [--name NAME] [--dry-run]
         # TIDAL's own continuation ("track radio") of each song in the file, mixed into one playlist
 
 The token is kept outside the repository (~/.config/tidal_generated/token.json), or comes
@@ -256,15 +256,41 @@ def pages(path, cc, limit=200):
     return ids
 
 
-def radio(path, name=None, dry=False, per=None):
-    """The songs Marko picked, each followed by TIDAL's own continuation of it (its track radio),
-    the way the app keeps playing after his choice. Duplicates are dropped."""
+def seconds(iso):
+    """ISO 8601 duration ("PT4M17S") -> seconds."""
+    m = re.match(r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?", iso or "")
+    return int(m.group(1) or 0) * 3600 + int(m.group(2) or 0) * 60 + float(m.group(3) or 0) if m else 0
+
+
+def details(ids, cc):
+    """[(id, "Artist - Title", song key, seconds)] in the order given; the key spots one song on several releases."""
+    out = []
+    for i in range(0, len(ids), 20):
+        batch = ids[i:i + 20]
+        t = call("GET", "/tracks", {"filter[id]": ",".join(batch), "countryCode": cc, "include": "artists"})
+        names = {x["id"]: x["attributes"]["name"] for x in t.get("included", []) if x["type"] == "artists"}
+        got = {x["id"]: x for x in t.get("data", [])}
+        for k in batch:
+            x = got.get(k)
+            if x:
+                arts = [names.get(a["id"], "") for a in x["relationships"]["artists"]["data"]]
+                at = x["attributes"]
+                key = (norm(arts[0] if arts else ""), at["title"], norm(at.get("version") or ""))
+                out.append((k, f"{', '.join(arts)} - {at['title']}", key, seconds(at.get("duration"))))
+    return out
+
+
+def radio(path, name=None, dry=False, per=None, hours=None, min_votes=1):
+    """The songs Marko picked, each with TIDAL's own continuation of it (its track radio), the way the app
+    keeps playing after his choice. The radios are mixed in turn (one song from each), repeats are dropped,
+    and with hours= it stops once the playlist is that long. min_votes=2 keeps only songs that at least two
+    of the radios agree on, which drops one-off picks outside the style."""
     first, rows = read_list(path)
     name = name or first or os.path.splitext(os.path.basename(path))[0]
     if "(generated)" not in name:
         name += " (generated)"
     cc = country()
-    order, songs = [], set()
+    lists = []
     for artist, title, pin in rows:
         hit, s = ((pin, artist, title), 1.0) if pin else find(artist, title, cc)
         if not hit or s < 0.6:
@@ -272,34 +298,39 @@ def radio(path, name=None, dry=False, per=None):
             continue
         mix = pages(f"/tracks/{hit[0]}/relationships/radio", cc)
         tracks = pages(f"/playlists/{mix[0]}/relationships/items", cc) if mix else []
-        added = []
-        seq = [hit[0]] + tracks[:per]
-        for i in range(0, len(seq), 20):  # the same song can come as several releases: keep one
-            batch = seq[i:i + 20]
-            t = call("GET", "/tracks", {"filter[id]": ",".join(batch), "countryCode": cc, "include": "artists"})
-            names = {x["id"]: x["attributes"]["name"] for x in t.get("included", []) if x["type"] == "artists"}
-            got = {x["id"]: x for x in t.get("data", [])}
-            for k in batch:
-                x = got.get(k)
-                if not x or k in order:
-                    continue
-                arts = [names.get(a["id"], "") for a in x["relationships"]["artists"]["data"]]
-                key = (norm(arts[0] if arts else ""), norm(x["attributes"]["title"]), norm(x["attributes"].get("version") or ""))
-                if key not in songs:
-                    songs.add(key)
-                    added.append(k)
-        order += added
-        print(f"OK  {artist} - {title}: +{len(added)} ({len(tracks)} in its radio)")
-    print(f"\n{len(order)} songs")
-    for i in range(0, min(len(order), 60), 20):  # show the start, so the mix can be checked
-        t = call("GET", "/tracks", {"filter[id]": ",".join(order[i:i + 20]), "countryCode": cc, "include": "artists"})
-        names = {x["id"]: x["attributes"]["name"] for x in t.get("included", []) if x["type"] == "artists"}
-        got = {x["id"]: x for x in t.get("data", [])}
-        for k in order[i:i + 20]:
-            x = got.get(k)
-            if x:
-                arts = ", ".join(names.get(a["id"], "") for a in x["relationships"]["artists"]["data"])
-                print(f"  {arts} - {x['attributes']['title']}")
+        lists.append(details([hit[0]] + [x for x in tracks if x != hit[0]][:per], cc))
+        print(f"OK  {artist} - {title}: {len(tracks)} in its radio")
+    canon = []  # one entry per song: (artist, title words); other releases/edits of it map onto it
+    noise = {"single", "extended", "edit", "version", "remaster", "remastered", "rerecorded", "re", "recorded",
+             "part", "pt", "pts", "original", "radio", "mix", "mono", "stereo", "live", "the", "a"}
+
+    def song(key):
+        a = re.sub(r"^the ", "", key[0])  # "The Commodores" = "Commodores"
+        w = {x for x in words(key[1]) if x not in noise and not x.isdigit()}  # full title, without edit words
+        for n, (a2, w2) in enumerate(canon):
+            if (a == a2 and len(w & w2) / max(len(w | w2), 1) >= 0.6) or (len(w) >= 3 and w == w2):  # or a cover
+                return n
+        canon.append((a, w))
+        return len(canon) - 1
+
+    votes = {}
+    for lst in lists:
+        for x in {song(x[2]) for x in lst}:
+            votes[x] = votes.get(x, 0) + 1
+    order, songs, total = [], set(), 0.0
+    for n in range(max(map(len, lists), default=0)):
+        for i, lst in enumerate(lists):
+            if n >= len(lst) or (hours and total >= hours * 3600):
+                continue
+            c = song(lst[n][2])
+            if c in songs or (n > 0 and votes[c] < min_votes):  # the picked songs themselves always stay
+                continue
+            songs.add(c)
+            order.append(lst[n])
+            total += lst[n][3]
+    print(f"\n{len(order)} songs, {total / 3600:.1f} h")
+    for k, label, _, _ in order:
+        print("  " + label)
     if dry:
         return
     made = call("POST", "/playlists", {"countryCode": cc}, {"data": {"type": "playlists", "attributes": {
@@ -308,7 +339,7 @@ def radio(path, name=None, dry=False, per=None):
     pid = made["data"]["id"]
     for i in range(0, len(order), 20):
         call("POST", f"/playlists/{pid}/relationships/items", {"countryCode": cc},
-             {"data": [{"type": "tracks", "id": x} for x in order[i:i + 20]]})
+             {"data": [{"type": "tracks", "id": x[0]} for x in order[i:i + 20]]})
     print(f"playlist '{name}': https://tidal.com/playlist/{pid}")
 
 
@@ -324,6 +355,8 @@ if __name__ == "__main__":
     elif a[:1] == ["radio"] and len(a) >= 2:
         nm = a[a.index("--name") + 1] if "--name" in a else None
         per = int(a[a.index("--per") + 1]) if "--per" in a else None
-        radio(a[1], nm, "--dry-run" in a, per)
+        hrs = float(a[a.index("--hours") + 1]) if "--hours" in a else None
+        votes = int(a[a.index("--min-radios") + 1]) if "--min-radios" in a else 1
+        radio(a[1], nm, "--dry-run" in a, per, hrs, votes)
     else:
         sys.exit(__doc__)

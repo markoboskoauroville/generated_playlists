@@ -22,3 +22,4 @@ The token stays out of the repo (`~/.config/tidal_generated/`), or comes from th
 | 2026-10-16 | [Reggae Vocal Healing (generated)](https://tidal.com/playlist/f819de05-39e0-4f6d-ab8e-c270e183d36d) | Nalini Blossom - The Water Blessing Song |
 | 2026-10-16 | [Nu Disco Chart (generated)](https://tidal.com/playlist/3fb44298-fa71-4bec-8016-eeda23e81105) | Nu Disco / Disco chart, top 17 (DJ app screenshots) |
 | 2026-10-17 | [Celebration Radio (generated)](https://tidal.com/playlist/4ce7e870-0cab-42c8-9ee8-42426b4c37cf) | TIDAL radio of Kool & The Gang - Celebration (96 songs) |
+| 2026-10-17 | [70s - Celebration (generated)](https://tidal.com/playlist/c4a1b896-e432-4085-b78b-75e7fe39752c) | 8 h of TIDAL radio from 14 soul, funk and disco classics, led by Celebration (110 songs) |

@@ -1,0 +1,130 @@
+# 70s - Celebration (generated)
+# 8 hours of TIDAL's own radio from these songs (soul, funk, disco greatest hits), mixed in turn, no repeats.
+# Run: python3 tools/tidal_playlist.py radio playlists/2026-10-17_70s-celebration.txt --hours 8 --min-radios 2
+
+Kool & The Gang - Celebration
+Stevie Wonder - Superstition
+Earth, Wind & Fire - September
+Chic - Le Freak
+Rick James - Super Freak
+Commodores - Brick House
+James Brown - Get Up (I Feel Like Being A) Sex Machine
+Marvin Gaye - Got to Give It Up
+Wild Cherry - Play That Funky Music
+Bill Withers - Lovely Day
+The Jackson 5 - I Want You Back
+Aretha Franklin - Respect
+Parliament - Give Up the Funk (Tear the Roof off the Sucker)
+Donna Summer - Hot Stuff
+
+# --- result on TIDAL, 2026-10-17: 110 songs, 8.0 h (the radio changes over time; this is what was saved) ---
+# Kool & The Gang - Celebration
+# Stevie Wonder - Superstition
+# Earth, Wind & Fire - September
+# CHIC - Le Freak
+# Rick James - Super Freak
+# Commodores - Brick House
+# James Brown - Get Up (I Feel Like Being A) Sex Machine
+# Marvin Gaye - Got To Give It Up
+# Wild Cherry - Play That Funky Music
+# Bill Withers - Lovely Day
+# The Jackson 5 - I Want You Back
+# Aretha Franklin - Respect
+# Parliament - Give Up The Funk (Tear The Roof Off The Sucker)
+# Donna Summer - Hot Stuff
+# Earth, Wind & Fire - Let's Groove
+# THE TEMPTATIONS - Papa Was A Rollin' Stone
+# Sister Sledge - He's the Greatest Dancer (1995 Remaster)
+# Kool & The Gang - Get Down On It
+# James Brown - Get Up Offa That Thing
+# Marvin Gaye, Tammi Terrell - Ain't No Mountain High Enough
+# James Brown, The Famous Flames - I Got You (I Feel Good)
+# Sister Sledge - We Are Family (1995 Remaster)
+# Michael Jackson - Don't Stop 'Til You Get Enough
+# Donna Summer - Bad Girls
+# Lipps Inc. - Funky Town
+# Carl Carlton - She's A Bad Mama Jama (She's Built, She's Stacked)
+# Herbie Hancock - Doin' It
+# KC & The Sunshine Band - Get Down Tonight (2004 Remaster)
+# The Jacksons - Blame It on the Boogie
+# Sam & Dave - Soul Man
+# Ohio Players - Love Rollercoaster
+# Bee Gees - Stayin Alive
+# KC & The Sunshine Band - That's the Way (I Like It) [2004 Remaster]
+# Stevie Wonder - I Wish
+# Hot Chocolate - You Sexy Thing
+# The Supremes - You Can't Hurry Love
+# Marvin Gaye - I Heard It Through The Grapevine
+# Kool & The Gang - Jungle Boogie
+# Gloria Gaynor - I Will Survive
+# The Pointer Sisters - I'm So Excited
+# Marvin Gaye - What's Going On
+# Commodores - Easy
+# Marvin Gaye - Sunny
+# Al Green - Let's Stay Together
+# Four Tops - I Can't Help Myself (Sugar Pie, Honey Bunch)
+# The Bar-Kays - Too Hot To Stop (Part 1) (Rerecorded)
+# Anita Ward - Ring My Bell
+# Kool & The Gang - Ladies Night
+# Stevie Wonder - Higher Ground
+# CHIC - Everybody Dance (2018 Remaster)
+# Rick James - Give It To Me Baby
+# Earth, Wind & Fire, The Emotions - Boogie Wonderland (with The Emotions)
+# The Jackson 5 - ABC
+# Parliament - P-Funk (Wants To Get Funked Up)
+# THE TEMPTATIONS - My Girl
+# Bee Gees - You Should Be Dancing
+# James Brown - It's Too Funky In Here
+# James Brown - Papa's Got A Brand New Bag
+# James Brown, Fred Wesley, The J.B.'s - People Get Up And Drive Your Funky Soul
+# Kool & The Gang - Fresh
+# Luther Vandross - Never Too Much
+# Redbone - Come and Get Your Love
+# Sly & The Family Stone - Thank You (Falettinme Be Mice Elf Agin)
+# Michael Jackson - Thriller
+# Diana Ross - Upside Down
+# Aretha Franklin - Rock Steady
+# KC & The Sunshine Band - Boogie Shoes (2004 Remaster)
+# Stevie Wonder - Signed, Sealed, Delivered (I'm Yours)
+# The Jacksons - Shake Your Body (Down to the Ground)
+# Sam & Dave - Hold On, I'm Comin'
+# Boney M. - Ma Baker
+# Hot Chocolate - Every 1's a Winner (Single Version)
+# The O'Jays - Love Train
+# The Supremes - Where Did Our Love Go
+# The Brothers Johnson - Get The Funk Out Ma Face
+# Gloria Gaynor - Never Can Say Goodbye
+# Curtis Mayfield - Move on Up (Single Edit)
+# The Supremes - Baby Love
+# Kool & The Gang - Hollywood Swinging
+# Patrick Hernandez - Born to Be Alive
+# The Pointer Sisters - Jump (For My Love)
+# Al Green - Love and Happiness
+# Tina Turner - Proud Mary
+# Whitney Houston - I Wanna Dance with Somebody (Who Loves Me)
+# Michael Jackson - Rock with You
+# Cameo - Word Up!
+# Four Tops - Reach Out I'll Be There
+# Sam Cooke - (What A) Wonderful World
+# The Bar-Kays - Shake Your Rump to the Funk (Rerecorded)
+# The Trammps - Disco Inferno
+# Stevie Wonder - Sir Duke
+# Bill Withers - Use Me
+# Ray Charles - What'd I Say, Pt. 1 & 2
+# Bee Gees - Night Fever
+# THE TEMPTATIONS - Ain't Too Proud To Beg
+# CHIC - Good Times (2018 Remaster)
+# The Commodores - Too Hot Ta Trot
+# Gladys Knight & The Pips - Midnight Train to Georgia
+# Aretha Franklin - Think
+# Donna Summer - I Feel Love
+# Diana Ross - I'm Coming Out
+# Stargard - Theme From "Which Way Is Up"
+# The O'Jays - Back Stabbers
+# Sly & The Family Stone - If You Want Me to Stay
+# ABBA - Dancing Queen
+# Sister Sledge - Lost in Music (1995 Remaster)
+# Dazz Band - Let It Whip
+# CHIC - I Want Your Love (2018 Remaster)
+# Stevie Wonder - For Once In My Life
+# James Brown - Get On The Good Foot
