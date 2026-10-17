@@ -27,7 +27,7 @@ His rules so far:
 | `2026-10-16_nu-disco.txt` | [Nu Disco Chart (generated)](https://tidal.com/playlist/3fb44298-fa71-4bec-8016-eeda23e81105) | 108 | Reference: his DJ app's Nu Disco / Disco chart, #1-17 (`handover/reference_nu-disco-chart_*.png`), then nu disco, disco house, disco pop, classics. #18 was cut off in the screenshot and left out. On TIDAL, "Le Freak" is the original (the script now finds the Dimitri From Paris remix, so a rebuild would use it). |
 
 Radio playlists (`radio` command): | `2026-10-17_celebration-radio.txt` | [Celebration Radio (generated)](https://tidal.com/playlist/4ce7e870-0cab-42c8-9ee8-42426b4c37cf) | 96 | TIDAL's continuation of Kool & The Gang - Celebration, which Marko liked. |
-| `2026-10-17_70s-celebration.txt` | [70s - Celebration (generated)](https://tidal.com/playlist/c4a1b896-e432-4085-b78b-75e7fe39752c) | 110 (8.0 h) | The Celebration radio expanded to 8 hours: radios of 14 soul/funk/disco classics, mixed in turn, `--hours 8 --min-radios 2`. Marko dictated the name by voice ("17 aces minus celebration" = "70s - Celebration"). |
+| `2026-10-17_70s-celebration.txt` | [70s, 80s - Celebration (generated)](https://tidal.com/playlist/c4a1b896-e432-4085-b78b-75e7fe39752c) | 110 (8.0 h) | The Celebration radio expanded to 8 hours: radios of 14 soul/funk/disco classics, mixed in turn, `--hours 8 --min-radios 2`. Marko dictated the name by voice (first "70s - Celebration", renamed on his request; PATCH /playlists/{id} with attributes.name works). |
 
 ## The TIDAL tool: `tools/tidal_playlist.py` (stdlib only)
 

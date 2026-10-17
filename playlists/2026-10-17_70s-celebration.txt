@@ -1,4 +1,4 @@
-# 70s - Celebration (generated)
+# 70s, 80s - Celebration (generated)
 # 8 hours of TIDAL's own radio from these songs (soul, funk, disco greatest hits), mixed in turn, no repeats.
 # Run: python3 tools/tidal_playlist.py radio playlists/2026-10-17_70s-celebration.txt --hours 8 --min-radios 2
 
