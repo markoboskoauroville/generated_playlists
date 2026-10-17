@@ -1,0 +1,5 @@
+# Celebration Radio (generated)
+# TIDAL radio of this song (the songs TIDAL plays after it), saved as a permanent playlist
+# Run: python3 tools/tidal_playlist.py radio playlists/2026-10-17_celebration-radio.txt
+
+Kool & The Gang - Celebration

@@ -26,6 +26,8 @@ His rules so far:
 | `2026-10-16_reggae-vocal-healing.txt` | [Reggae Vocal Healing (generated)](https://tidal.com/playlist/f819de05-39e0-4f6d-ab8e-c270e183d36d) | 36 | Reference: Nalini Blossom - The Water Blessing Song (`handover/reference_nalini-*.png`). Mike Love "Human Revolution" and Koffee "Toast" (only a remix) were swapped for "Love Will Find a Way" and "Raggamuffin". |
 | `2026-10-16_nu-disco.txt` | [Nu Disco Chart (generated)](https://tidal.com/playlist/3fb44298-fa71-4bec-8016-eeda23e81105) | 108 | Reference: his DJ app's Nu Disco / Disco chart, #1-17 (`handover/reference_nu-disco-chart_*.png`), then nu disco, disco house, disco pop, classics. #18 was cut off in the screenshot and left out. On TIDAL, "Le Freak" is the original (the script now finds the Dimitri From Paris remix, so a rebuild would use it). |
 
+Radio playlists (`radio` command): | `2026-10-17_celebration-radio.txt` | [Celebration Radio (generated)](https://tidal.com/playlist/4ce7e870-0cab-42c8-9ee8-42426b4c37cf) | 96 | TIDAL's continuation of Kool & The Gang - Celebration, which Marko liked. |
+
 ## The TIDAL tool: `tools/tidal_playlist.py` (stdlib only)
 
 ```
