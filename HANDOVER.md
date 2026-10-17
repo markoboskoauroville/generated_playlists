@@ -52,6 +52,12 @@ prefers, in order: the named remix if the line names one → the plain original 
 live, demo, reprise and "Mixed" (cuts from continuous DJ mixes) lose a tie. Lines scoring under 60 % are
 reported with `--` and skipped.
 
+**TIDAL's own continuation (`radio`):** TIDAL's API has no listening history, so the songs TIDAL autoplayed
+after Marko's pick can't be read back. Instead, `radio` takes the songs he picked and, for each one, adds TIDAL's
+**track radio** (`/tracks/{id}/relationships/radio` → a MIX playlist of about 100 songs, paged with cursors),
+dropping repeats (the same artist and title on another release). `--per N` keeps the first N of each radio. It's
+the same algorithm the app uses to continue a song, but the exact order the app played can differ.
+
 If search still can't reach a track, pin it: `Artist - Title [tidal:<track id>]` (used for "Lola's Theme (VIP)").
 
 ## Logging in (only if the token stops working; Marko is on an Android phone)

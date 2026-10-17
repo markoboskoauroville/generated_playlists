@@ -11,6 +11,7 @@ Playlists Claude generates from reference songs, to continue in the same musical
 python3 tools/tidal_playlist.py login-url                  # open it, log in to TIDAL
 python3 tools/tidal_playlist.py login-finish '<the localhost URL the browser landed on>'
 python3 tools/tidal_playlist.py create playlists/2026-10-16_reggae-vocal-healing.txt [--dry-run]
+python3 tools/tidal_playlist.py radio playlists/X.txt [--per N] [--dry-run]   # TIDAL's own continuation of each song
 ```
 
 The cloud environment must allow `login.tidal.com`, `auth.tidal.com` and `openapi.tidal.com`.
