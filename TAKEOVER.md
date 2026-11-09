@@ -1,3 +1,7 @@
+
+
+## From the former README (9.11.2026)
+
 # generated_playlists
 
 Playlists Claude generates from reference songs, to continue in the same musical style.
